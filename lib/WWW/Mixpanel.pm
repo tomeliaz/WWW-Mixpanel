@@ -79,7 +79,7 @@ __END__
 
 =head1 DESCRIPTION
 
-The WWW::Mixpanel module is a young implementation of the L<http://mixpanel.com> API which provides realtime online analytics. L<Mixpanel.com> receives events from your application's perl code, javascript, email open and click tracking, and many more sources, and provides visualization and publishing of analytics.
+The WWW::Mixpanel module is a young implementation of the L<http://mixpanel.com> API which provides realtime online analytics. L<http://mixpanel.com> receives events from your application's perl code, javascript, email open and click tracking, and many more sources, and provides visualization and publishing of analytics.
 
 Currently, this module mirrors the event tracking API (L<http://mixpanel.com/api/docs/specification>), and will be extended to include the powerful data access and platform parts of the api. B<FEATURE REQUESTS> are always welcome, as are patches.
 

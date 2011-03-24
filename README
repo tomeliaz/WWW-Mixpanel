@@ -12,7 +12,7 @@ SYNOPSIS
 DESCRIPTION
     The WWW::Mixpanel module is a young implementation of the
     <http://mixpanel.com> API which provides realtime online analytics.
-    Mixpanel.com receives events from your application's perl code,
+    <http://mixpanel.com> receives events from your application's perl code,
     javascript, email open and click tracking, and many more sources, and
     provides visualization and publishing of analytics.
 
