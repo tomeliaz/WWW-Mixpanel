@@ -22,10 +22,6 @@ sub new {
   my ( $class, $token, $use_ssl ) = @_;
 
   croak "You must provide your API token." unless $token;
-
-  $use_ssl ||= 0;
-  $use_ssl = 1 if $use_ssl;
-
   bless { token => $token, use_ssl => $use_ssl }, $class;
 }
 
@@ -33,10 +29,9 @@ sub track {
   my ( $self, %params ) = @_;
 
   my $event = delete $params{event};
-
   croak "You must provide an event name" unless $event;
 
-  $params{time} = $params{time} || time();
+  $params{time} ||= time();
   $params{token} = $self->{token};
 
   my $data = { event      => $event,
