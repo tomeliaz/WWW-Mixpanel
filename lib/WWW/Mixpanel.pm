@@ -26,9 +26,8 @@ sub new {
 }
 
 sub track {
-  my ( $self, %params ) = @_;
+  my ( $self, $event, %params ) = @_;
 
-  my $event = delete $params{event};
   croak "You must provide an event name" unless $event;
 
   $params{time} ||= time();
@@ -76,13 +75,13 @@ __END__
 
   use WWW::Mixpanel;
   my $mp = WWW::Mixpanel->new( '1827378adad782983249287292a', 1 );
-  $mp->track(event => 'login', distinct_id => 'username', mp_source => 'twitter');
+  $mp->track('login', distinct_id => 'username', mp_source => 'twitter');
 
 =head1 DESCRIPTION
 
 The WWW::Mixpanel module is a young implementation of the L<http://mixpanel.com> API which provides realtime online analytics. L<Mixpanel.com> receives events from your application's perl code, javascript, email open and click tracking, and many more sources, and provides visualization and publishing of analytics.
 
-Currently, this module mirrors the event tracking API (L<http://mixpanel.com/api/docs/specification>), and can be extended to include the powerful data access and platform parts of the api. B<FEATURE REQUESTS> are always welcome, as are patches.
+Currently, this module mirrors the event tracking API (L<http://mixpanel.com/api/docs/specification>), and will be extended to include the powerful data access and platform parts of the api. B<FEATURE REQUESTS> are always welcome, as are patches.
 
 This module is designed to croak on failure, please use something like Try::Tiny.
 
@@ -90,21 +89,19 @@ This module is designed to croak on failure, please use something like Try::Tiny
 
 =head2 new( $token, [$use_ssl] )
 
-Returns a new instance of this class. You must supply the API token for your mixpanel project.
-HTTP is used to connect unless you provide a true value for use_ssl.
+Returns a new instance of this class. You must supply the API token for your mixpanel project. HTTP is used to connect unless you provide a true value for use_ssl.
 
-=head2 track( event => '<event name>', [time => timestamp, ...])
+=head2 track('<event name>', [time => timestamp, key => val, ...])
 
-Send an event to the API with the given event name, which is a required parameter.
-If you do not include a time parameter, the value of time() is set for you automatically.
-Other parameters are optional, and are included as-is as parameters in the api.
-
-Today, there is no way to set 'URL' parameters such as ip, callback, img, redirect.
+Send an event to the API with the given event name, which is a required parameter. If you do not include a time parameter, the value of time() is set for you automatically. Other parameters are optional, and are included as-is as parameters in the api.
 
 This method returns 1 or croaks with a message.
+
 Per the Mixpanel API, a 1 return indicates the event reached the mixpanel.com API and was properly formatted. 1 does not indicate the event was actually written to your project, in cases such as bad API token. This is a limitation of the service.
 
 You are strongly encouraged to use something like C<Try::Tiny> to wrap calls to this API.
+
+Today, there is no way to set 'URL' parameters such as ip=1, callback, img, redirect. You can supply ip as a parameter similar to distinct_id, to track users.
 
 =head1 TODO
 
@@ -112,7 +109,11 @@ You are strongly encouraged to use something like C<Try::Tiny> to wrap calls to 
 
 =item /track to accept array of events
 
-Track will shortly be extended to accept an array of hashrefs. These will be sent as a batch of events to the /track API in a single bulk call. This will greatly help you if you are able to pull multiple events from a queue.
+Track will soon be able to accept many events, and will bulk-send them to mixpanel in one call if possible.
+
+=item Data API
+
+The data API lets you pull your data from mixpanel.
 
 =item /platform support
 
@@ -122,11 +123,11 @@ The Platform API will be supported. Let me know if this is a feature you'd like 
 
 =head1 FEATURE REQUESTS
 
-Please send feature requests to me via rt or email. Patches are always welcome.
+Please send feature requests to me via rt or github. Patches are always welcome.
 
 =head1 BUGS
 
-Do your thing at L<http://rt.cpan.org>.
+Do your thing on CPAN.
 
 =head1 AFFILIATION
 
