@@ -9,14 +9,14 @@ use warnings;
 use LWP::UserAgent;
 use JSON::Any;
 use MIME::Base64;
-use JSON::Any;
+use JSON;
 use Carp;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(30);
 $ua->env_proxy;
 
-my $json = JSON::Any->new;
+my $json = JSON->new;
 
 sub new {
   my ( $class, $token, $use_ssl ) = @_;
@@ -101,7 +101,7 @@ Per the Mixpanel API, a 1 return indicates the event reached the mixpanel.com AP
 
 You are strongly encouraged to use something like C<Try::Tiny> to wrap calls to this API.
 
-Today, there is no way to set 'URL' parameters such as ip=1, callback, img, redirect. You can supply ip as a parameter similar to distinct_id, to track users.
+Today, there is no way to set URL parameters such as ip=1, callback, img, redirect. You can supply ip as a parameter similar to distinct_id, to track users.
 
 =head1 TODO
 

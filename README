@@ -46,7 +46,7 @@ METHODS
     You are strongly encouraged to use something like "Try::Tiny" to wrap
     calls to this API.
 
-    Today, there is no way to set 'URL' parameters such as ip=1, callback,
+    Today, there is no way to set URL parameters such as ip=1, callback,
     img, redirect. You can supply ip as a parameter similar to distinct_id,
     to track users.
 
