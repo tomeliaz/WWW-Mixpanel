@@ -59,7 +59,7 @@ METHODS
     img, redirect. You can supply ip as a parameter similar to distinct_id,
     to track users.
 
-  data('<api/path>', param => val, param => val ...)
+  data('<path/path>', param => val, param => val ...)
     Obtain data from mixpanel.com using the Data API
     <http://mixpanel.com/api/docs/guides/api/v2>. The first parameter to the
     method identifies the path off the api root.
