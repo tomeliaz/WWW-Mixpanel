@@ -1,4 +1,7 @@
 Revision history for WWW-Mixpanel
 
+0.02   Sun Mar 27 23:11:09 PDT 2011
+       - Build data api support.
+
 0.01   Wed Mar 23 22:58:06 PDT 2011
        - Initial version; Support for single event submission to /track API.
