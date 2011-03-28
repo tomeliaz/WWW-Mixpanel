@@ -1,6 +1,3 @@
-#API key: e529fbedcde44c43648b7c9a4e11ee59
-#  API secret: a83f896aa170edbde177df14711a94ec
-# Token: 0d09131593bd36cf8086be81516e83a9
 use strict;
 use warnings;
 use Test::More;
