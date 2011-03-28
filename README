@@ -65,7 +65,7 @@ METHODS
     method identifies the path off the api root.
 
     For example to access the "events/top" functionality, found at
-    "http://mixpanel.com/api/2.0/events/top", you would pass the string
+    <http://mixpanel.com/api/2.0/events/top/>, you would pass the string
     "events/top" to the data method.
 
     Some parameters of the data api are of array type, for example

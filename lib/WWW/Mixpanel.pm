@@ -208,7 +208,7 @@ Today, there is no way to set URL parameters such as ip=1, callback, img, redire
 Obtain data from mixpanel.com using the L<Data API|http://mixpanel.com/api/docs/guides/api/v2>.
 The first parameter to the method identifies the path off the api root.
 
-For example to access the C<events/top> functionality, found at C<http://mixpanel.com/api/2.0/events/top/>, you would pass the string C<events/top> to the data method.
+For example to access the C<events/top> functionality, found at L<http://mixpanel.com/api/2.0/events/top/>, you would pass the string C<events/top> to the data method.
 
 Some parameters of the data api are of array type, for example C<events/retention> parameter C<event>. In every case where a parameter is of array type, you may supply the parameter as either an ARRAYREF or a single string.
 
