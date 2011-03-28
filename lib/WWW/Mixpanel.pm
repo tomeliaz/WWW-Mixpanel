@@ -1,15 +1,15 @@
 package WWW::Mixpanel;
 
-BEGIN {
-  $WWW::Mixpanel::VERSION = '0.02';
-}
-
 use strict;
 use warnings;
 use LWP::UserAgent;
 use MIME::Base64;
 use JSON;
 use Carp;
+
+BEGIN {
+  $WWW::Mixpanel::VERSION = '0.02';
+}
 
 sub new {
   my ( $class, $token, $use_ssl, $api_key, $api_secret ) = @_;

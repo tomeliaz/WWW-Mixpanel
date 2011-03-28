@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 5;
 use WWW::Mixpanel;
 
 my $YOUR_TESTING_API_TOKEN = $ENV{MIXPANEL_TESTING_API_TOKEN};
@@ -10,7 +10,10 @@ if ( !$YOUR_TESTING_API_TOKEN ) {
 
   If you would like to run Mixpanel tests against your API token to observe the results,
   please set the environment variable MIXPANEL_TESTING_API_TOKEN
-  and re-run the tests. You can clear your project data after testing.
+  and re-run the tests.
+
+  I suggest creating a separate test project under your mixpanel account, which
+  can be used for testing.
 
   Mixpanel does not provide a testing token, and only returns 1 / 0
   if the data is properly encoded.
@@ -20,7 +23,7 @@ INFO
 }
 
 SKIP: {
-  skip 'No personal API token provided, skipping Live tests', 6 unless $YOUR_TESTING_API_TOKEN;
+  skip 'No personal API token provided, skipping Live tests', 5 unless $YOUR_TESTING_API_TOKEN;
 
   ok( my $mp = WWW::Mixpanel->new($YOUR_TESTING_API_TOKEN) );
   ok( $mp->track('www-mixpanel test1'), 'Track event, auto-supply time' );

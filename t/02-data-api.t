@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 26;
 use Test::Exception;
 use WWW::Mixpanel;
 
@@ -15,7 +15,7 @@ if ( !$YOUR_TESTING_API_TOKEN || !$YOUR_TESTING_API_KEY || !$YOUR_TESTING_API_SE
 
   To run the data request tests, you must set the following env vars:
   MIXPANEL_TESTING_API_TOKEN, MIXPANEL_TESTING_API_KEY, MIXPANEL_TESTING_API_SEC
-  and re-run the tests. You can clear your project data after testing.
+  and re-run the tests.
 
   These can be obtained from your mixpanel account page.
 INFO
