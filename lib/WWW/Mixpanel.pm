@@ -16,7 +16,7 @@ sub new {
   croak "You must provide your API token." unless $token;
 
   my $ua = LWP::UserAgent->new;
-  $ua->timeout(30);
+  $ua->timeout(180);
   $ua->env_proxy;
 
   my $json = JSON->new->allow_blessed(1)->convert_blessed(1);
@@ -25,7 +25,7 @@ sub new {
           use_ssl                         => $use_ssl,
           api_key                         => $api_key,
           api_secret                      => $api_secret,
-          data_api_default_expire_seconds => 300,
+          data_api_default_expire_seconds => 180,
           track_api                       => 'api.mixpanel.com/track/', # trailing slash required
           data_api                        => 'mixpanel.com/api/2.0/',
           json                            => $json,
@@ -88,7 +88,7 @@ sub data {
   $url .= $api_methods;
 
   # We have to hand-build the url because HTTP::REQUEST/HEADER was
-  # changing understcores, capitalization, and Mixpanel is very sensitive
+  # changing underscores and capitalization, and Mixpanel is sensitive
   # about such things.
   my $ps = join( '&', map {"$_=$params{$_}"} sort keys %params );
   my $res = $self->{ua}->get( $url . '/?' . $ps );
