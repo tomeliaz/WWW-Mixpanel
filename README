@@ -34,12 +34,12 @@ DESCRIPTION
     Try::Tiny.
 
 METHODS
-  new( $token, [$use_ssl] )
+  new( $token, [$use_ssl], [$api_key], [$api_secret] )
     Returns a new instance of this class. You must supply the API token for
     your mixpanel project. HTTP is used to connect unless you provide a true
     value for use_ssl.
 
-  track('<event name>', [time => timestamp, param => val, ...])
+  track('<event name>', time => timestamp, param => val, ...)
     Send an event to the API with the given event name, which is a required
     parameter. If you do not include a time parameter, the value of time()
     is set for you automatically. Other parameters are optional, and are
