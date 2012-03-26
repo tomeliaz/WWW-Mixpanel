@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 5;
+use lib qw(lib);
 use WWW::Mixpanel;
 
 my $YOUR_TESTING_API_TOKEN = $ENV{MIXPANEL_TESTING_API_TOKEN};
@@ -29,12 +30,12 @@ SKIP: {
   ok( $mp->track('www-mixpanel test1'), 'Track event, auto-supply time' );
   ok( $mp->track( 'www-mixpanel test2', time => time() - 60 ), 'Track event, time supplied' );
   ok( $mp->track( 'www-mixpanel test3',
-                  mp_source   => 'www-mixpanel',
+                  source      => 'www-mixpanel',
                   distinct_id => 'user1',
                   attribute1  => 'a1',
                   attribute2  => 'a2' ),
       'Track event 3' );
-  my $eventparams = { mp_source   => 'www-mixpanel',
+  my $eventparams = { source      => 'www-mixpanel',
                       distinct_id => 'user1',
                       attribute1  => 'a1',
                       attribute2  => 'a2' };

@@ -5,15 +5,14 @@ use warnings;
 use LWP::UserAgent;
 use MIME::Base64;
 use JSON;
-use Carp;
 
 BEGIN {
-  $WWW::Mixpanel::VERSION = '0.02';
+  $WWW::Mixpanel::VERSION = '0.03';
 }
 
 sub new {
   my ( $class, $token, $use_ssl, $api_key, $api_secret ) = @_;
-  croak "You must provide your API token." unless $token;
+  die "You must provide your API token." unless $token;
 
   my $ua = LWP::UserAgent->new;
   $ua->timeout(180);
@@ -35,7 +34,7 @@ sub new {
 sub track {
   my ( $self, $event, %params ) = @_;
 
-  croak "You must provide an event name" unless $event;
+  die "You must provide an event name" unless $event;
 
   $params{time} ||= time();
   $params{token} = $self->{token};
@@ -54,11 +53,11 @@ sub track {
       return 1;
     }
     else {
-      croak "Failure from api: " . $res->content;
+      die "Failure from api: " . $res->content;
     }
   }
   else {
-    croak "Failed sending event: " . $self->_res($res);
+    die "Failed sending event: " . $self->_res($res);
   }
 } # end track
 
@@ -75,8 +74,8 @@ sub data {
   $params{format} ||= 'json';
   $params{expire} = time() + $self->{data_api_default_expire_seconds}
     if !defined( $params{expire} );
-  $params{api_key} = $self->{api_key} || croak 'API Key must be specified for data requests';
-  my $api_secret = $self->{api_secret} || croak 'API Secret must be specified for data requests';
+  $params{api_key} = $self->{api_key} || die 'API Key must be specified for data requests';
+  my $api_secret = $self->{api_secret} || die 'API Secret must be specified for data requests';
 
   my $sig = $self->_create_sig( $api_secret, \%params );
   $params{sig} = $sig;
@@ -99,7 +98,7 @@ sub data {
     return $reso;
   }
   else {
-    croak "Failed sending event: " . $self->_res($res);
+    die "Failed sending event: " . $self->_res($res);
   }
 } # end data
 
@@ -121,18 +120,14 @@ sub _data_params_to_json {
 
   # A few API calls require json encoded arrays, so transform those here.
   my $toj;
-  if (    $api eq 'events'
-       || $api eq 'events/retention' ) {
+  if ( $api eq 'events' ) {
     $toj = 'event';
   }
   if ( $api eq 'events/properties' ) {
     $toj = 'values';
   }
-  if ( $api eq 'funnels' ) {
-    $toj = 'funnel';
-  }
-  if ( $api eq 'funnels/dates' ) {
-    $toj = 'funnel';
+  if ( $api eq 'arb_funnels' ) {
+    $toj = 'events';
   }
 
   if ( $toj && defined( $params->{$toj} ) ) {
@@ -166,12 +161,12 @@ __END__
 
   use WWW::Mixpanel;
   my $mp = WWW::Mixpanel->new( '1827378adad782983249287292a', 1 );
-  $mp->track('login', distinct_id => 'username', mp_source => 'twitter');
+  $mp->track('login', distinct_id => 'username', mp_name_tag => 'username', source => 'twitter');
 
 or if you also want to access the data api
 
   my $mp = WWW::Mixpanel->new(<API TOKEN>,1,<API KEY>,<API SECRET>);
-  $mp->track('login', distinct_id => 'username', mp_source => 'twitter');
+  $mp->track('login', distinct_id => 'username', mp_name_tag => 'username', source => 'twitter');
   my $enames = $mp->data( 'events/names', type => 'unique' );
   my $fdates = $mp->data( 'funnels/dates',
                  funnel => [qw/funnel1 funnel2/],
@@ -179,11 +174,11 @@ or if you also want to access the data api
 
 =head1 DESCRIPTION
 
-The WWW::Mixpanel module is a young implementation of the L<http://mixpanel.com> API which provides realtime online analytics. L<http://mixpanel.com> receives events from your application's perl code, javascript, email open and click tracking, and many more sources, and provides visualization and publishing of analytics.
+The WWW::Mixpanel module is an implementation of the L<http://mixpanel.com> API which provides realtime online analytics. L<http://mixpanel.com> receives events from your application's perl code, javascript, email open and click tracking, and many more sources, and provides visualization and publishing of analytics.
 
 Currently, this module mirrors the event tracking API (L<http://mixpanel.com/api/docs/specification>), and will be extended to include the powerful data access and platform parts of the api. B<FEATURE REQUESTS> are always welcome, as are patches.
 
-This module is designed to croak on failure, please use something like Try::Tiny.
+This module is designed to die on failure, please use something like Try::Tiny.
 
 =head1 METHODS
 
@@ -195,7 +190,7 @@ Returns a new instance of this class. You must supply the API token for your mix
 
 Send an event to the API with the given event name, which is a required parameter. If you do not include a time parameter, the value of time() is set for you automatically. Other parameters are optional, and are included as-is as parameters in the api.
 
-This method returns 1 or croaks with a message.
+This method returns 1 or dies with a message.
 
 Per the Mixpanel API, a 1 return indicates the event reached the mixpanel.com API and was properly formatted. 1 does not indicate the event was actually written to your project, in cases such as bad API token. This is a limitation of the service.
 
@@ -217,7 +212,7 @@ This method will then return the result of the api call as a decoded perl object
 
 If you specify format => 'csv', this method will return the csv return string unchanged.
 
-This method will croak on errors, including malformed parameters, indicated by bad return codes from the api. It croaks with the text of the api reply directly, often a json string indicating which parameter was malformed.
+This method will die on errors, including malformed parameters, indicated by bad return codes from the api. It dies with the text of the api reply directly, often a json string indicating which parameter was malformed.
 
 I<To see all API methods at work, look into the module tests.>
 
