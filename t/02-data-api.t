@@ -1,7 +1,8 @@
 use strict;
 use warnings;
-use Test::More tests => 26;
+use Test::More tests => 23;
 use Test::Exception;
+use lib qw(lib);
 use WWW::Mixpanel;
 
 my $YOUR_TESTING_API_TOKEN = $ENV{MIXPANEL_TESTING_API_TOKEN};
@@ -24,33 +25,25 @@ INFO
 }
 
 SKIP: {
-  skip '', 26 unless !$skip;
+  skip '', 23 unless !$skip;
   ok( my $mp = WWW::Mixpanel->new( $YOUR_TESTING_API_TOKEN, 0, $YOUR_TESTING_API_KEY,
                                    $YOUR_TESTING_API_SEC ) );
   ok( $mp->track( 'www-mixpanel data1', 'distinct_id' => 'abc' ), 'Submit Data1' );
   ok( $mp->track( 'www-mixpanel data2', 'distinct_id' => 'abc', prop => 'prop1' ), 'Submit Data2' );
 
-  # This funnel is used for testing, and will go away after about 2 weeks of non-use
-  ok( $mp->track( 'mp_funnel',
+  # We no longer create funnels in track, instead see the arb_funnels undocumented (but stable)
+  # test below.
+  ok( $mp->track( 'login',
                   distinct_id => 'abcd',
-                  gender      => 'male',
-                  funnel      => 'test_funnel',
-                  step        => 1,
-                  goal        => 'mygoal' ),
+                  gender      => 'male', ),
       'Submit Funnel' );
-  ok( $mp->track( 'mp_funnel',
+  ok( $mp->track( 'login',
                   distinct_id => 'abc',
-                  gender      => 'male',
-                  funnel      => 'test_funnel',
-                  step        => 1,
-                  goal        => 'mygoal' ),
+                  gender      => 'male', ),
       'Submit Funnel' );
-  ok( $mp->track( 'mp_funnel',
+  ok( $mp->track( 'logout',
                   distinct_id => 'abc',
-                  gender      => 'male',
-                  funnel      => 'test_funnel',
-                  step        => 2,
-                  goal        => 'mygoal2' ),
+                  gender      => 'male', ),
       'Submit Funnel' );
 
   sleep(2);
@@ -81,11 +74,11 @@ SKIP: {
 
   is( @{ $mp->data( 'events/names', type => 'general', limit => 2 ) }, 2, 'events/names limit=>2' );
 
-  ok( $mp->data( 'events/retention',
-                 event    => 'www-mixpanel data2',
-                 unit     => 'day',
-                 interval => 2 ),
-      'events/retention' );
+  ok( $mp->data( 'retention',
+                 retention_type => 'compounded',
+                 event          => 'www-mixpanel data2',
+                 unit           => 'day' ),
+      'event/retention' );
 
   ok( @{$mp->data( 'events/properties',
                    event    => 'www-mixpanel data2',
@@ -132,34 +125,15 @@ SKIP: {
       'prop1',
       'events/properties/values' );
 
-  ok( $mp->data( 'funnels',
-                 funnel   => 'test_funnel',
-                 unit     => 'week',
-                 interval => 3 )->{test_funnel},
-      'funnels' );
+  is( @{ $mp->data('funnels/list') }, 0, 'funnels/list' );
 
-  ok( @{$mp->data( 'funnels/names',
-                   unit     => 'week',
-                   interval => 1 ) },
-      'funnels/names' );
-
-  ok( $mp->data( 'funnels/dates',
-                 funnel => [qw/test_funnel unknown_funnel/],
-                 unit   => 'week' )->{test_funnel},
-      'funnels/dates' );
-
-  ok( $mp->data( 'funnels/properties',
-                 funnel   => 'test_funnel',
-                 name     => 'gender',
-                 unit     => 'week',
-                 interval => 1 ),
-      'funnels/properties' );
-
-  ok( $mp->data( 'funnels/properties/names',
-                 funnel   => 'test_funnel',
-                 unit     => 'week',
-                 interval => 2 )->{gender}->{count},
-      'funnels/properties/names' );
+  ### UNDOCUMENTED BUT STABLE API ENDPIONT ###
+  ### This lets us create a funnel query on the fly given a set of events
+  ### Optional parameters are those which appear in funnels/ such as to_date from_date interval, etc.
+  my $funnel_data =
+    $mp->data( 'arb_funnels', events => [ { "event" => 'login' }, { "event" => 'logout' } ] );
+  my $date = pop [ sort keys %{ $funnel_data->{data} } ];
+  is( @{ $funnel_data->{data}->{$date}->{steps} }, 2, 'arb_funnels' );
 
   # Test malformed JSON request
   dies_ok {

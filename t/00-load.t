@@ -1,6 +1,7 @@
 use Test::More tests => 1;
 
 BEGIN {
+  use lib qw(lib);
   use_ok('WWW::Mixpanel');
 }
 
