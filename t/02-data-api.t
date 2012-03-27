@@ -46,7 +46,7 @@ SKIP: {
                   gender      => 'male', ),
       'Submit Funnel' );
 
-  sleep(2);
+  sleep(5);
 
   is( $mp->data( 'events',
                  event    => [ 'www-mixpanel data1', 'www-mixpanel data2' ],
