@@ -7,7 +7,7 @@ use MIME::Base64;
 use JSON;
 
 BEGIN {
-  $WWW::Mixpanel::VERSION = '0.03';
+  $WWW::Mixpanel::VERSION = '0.04';
 }
 
 sub new {

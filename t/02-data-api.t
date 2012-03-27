@@ -132,8 +132,8 @@ SKIP: {
   ### Optional parameters are those which appear in funnels/ such as to_date from_date interval, etc.
   my $funnel_data =
     $mp->data( 'arb_funnels', events => [ { "event" => 'login' }, { "event" => 'logout' } ] );
-  my $date = pop [ sort keys %{ $funnel_data->{data} } ];
-  is( @{ $funnel_data->{data}->{$date}->{steps} }, 2, 'arb_funnels' );
+  my @date = sort keys %{ $funnel_data->{data} };
+  is( @{ $funnel_data->{data}->{ pop @date }->{steps} }, 2, 'arb_funnels' );
 
   # Test malformed JSON request
   dies_ok {
