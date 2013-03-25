@@ -35,7 +35,7 @@ WWW::Mixpanel
 
 # VERSION
 
-version 0.04
+version 0.05
 
 # NAME
 
@@ -43,7 +43,7 @@ WWW::Mixpanel
 
 # VERSION
 
-version 0.04
+version 0.05
 
 # METHODS
 
