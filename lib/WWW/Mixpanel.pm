@@ -7,7 +7,7 @@ use MIME::Base64;
 use JSON;
 
 BEGIN {
-  $WWW::Mixpanel::VERSION = '0.05';
+  $WWW::Mixpanel::VERSION = '0.06';
 }
 
 sub new {
@@ -253,7 +253,7 @@ WWW::Mixpanel
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
@@ -284,7 +284,7 @@ WWW::Mixpanel
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 METHODS
 

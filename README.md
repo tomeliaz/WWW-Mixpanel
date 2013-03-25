@@ -4,7 +4,7 @@ WWW::Mixpanel
 
 # VERSION
 
-version 0.05
+version 0.06
 
 # SYNOPSIS
 
@@ -35,7 +35,7 @@ WWW::Mixpanel
 
 # VERSION
 
-version 0.05
+version 0.06
 
 # NAME
 
@@ -43,7 +43,7 @@ WWW::Mixpanel
 
 # VERSION
 
-version 0.05
+version 0.06
 
 # METHODS
 
