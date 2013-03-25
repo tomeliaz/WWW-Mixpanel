@@ -27,10 +27,7 @@ SKIP: {
   skip 'No personal API token provided, skipping Live tests', 4 unless $YOUR_TESTING_API_TOKEN;
 
   ok( my $mp = WWW::Mixpanel->new($YOUR_TESTING_API_TOKEN) );
-  ok( $mp->people_set('testuser@test.com', 
-      'Test' => 'true', 
-      '$first_name' => 'test', 
-      '$last_name' => 'user'), 'People API set' );
+  ok( $mp->people_set('testuser@test.com','Test' => 'true', '$first_name' => 'test', '$last_name' => 'user'), 'People API set' );
   ok( $mp->people_increment( 'testuser@test.com', 'tests' => 1  ), 'People api increment' );
   ok( $mp->people_track_charge( 'testuser@test.com', 26.00 ), 'People api track charge' );
 }

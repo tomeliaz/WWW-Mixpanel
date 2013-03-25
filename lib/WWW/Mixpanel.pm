@@ -114,7 +114,7 @@ sub people_append_transactions{
 
 sub people_track_charge{
   my ( $self, $distinct_id, $amount ) = @_;
-  
+
   die "Distinct User Id required" unless $distinct_id;
 
   return $self->people_append_transactions( $distinct_id, '$time' => time(), '$amount' => $amount);
