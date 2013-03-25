@@ -322,6 +322,18 @@ This method will die on errors, including malformed parameters, indicated by bad
 
 I<To see all API methods at work, look into the module tests.>
 
+=head2 people_set('distinct_id', param => val, param => val ...)
+
+Sets people properties on a distinct_id
+
+=head2 people_increment('distinct_id', param => val, param => val ...)
+
+Increments people properties on a distinct_id
+
+=head2 people_track_charge('distinct_id', charge_amount)
+
+Tracks a revenue event for specific charge amount
+
 =head1 TODO
 
 =over 4
