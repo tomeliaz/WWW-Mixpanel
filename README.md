@@ -87,6 +87,21 @@ indicated by bad return codes from the API. It dies with the text of
 the API reply directly, often a JSON string indicating which parameter
 was malformed.
 
+```perl
+  people_set('distinct_id', param => val, param => val ...)
+```
+Sets people properties for a distinct user
+
+```perl
+  people_increment('distinct_id', param => inc_amount, param => inc_amount ...)
+```
+Increments people properties for a distinct user
+
+```perl
+  people_track_charge('distinct_id', charge_amount)
+```
+
+
 # TODO
     /track to accept array of events
         Track should accept many events, and bulk-send
