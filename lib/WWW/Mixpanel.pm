@@ -27,9 +27,99 @@ sub new {
           data_api_default_expire_seconds => 180,
           track_api                       => 'api.mixpanel.com/track/', # trailing slash required
           data_api                        => 'mixpanel.com/api/2.0/',
+          people_api                      => 'api.mixpanel.com/engage/',
           json                            => $json,
           ua                              => $ua, }, $class;
 }
+
+sub people_set{
+  my ( $self, $distinct_id, %params ) = @_;
+
+  die "Distinct User Id required" unless $distinct_id;
+
+  my $data = { '$set'  => \%params,
+               '$distinct_id' => $distinct_id,
+               '$ip' => 0,
+               '$token' => $self->{token}
+  };
+
+  my $res =
+    $self->{ua}->post( $self->{use_ssl}
+      ? "https://$self->{people_api}"
+      : "http://$self->{people_api}",
+      { 'data' => encode_base64( $self->{json}->encode($data), '' ) } );
+
+  if ( $res->is_success ) {
+    if ( $res->content == 1 ) {
+      return 1;
+    }
+    else {
+      die "Failure from api: " . $res->content;
+    }
+  }
+  else {
+    die "Failed sending event: " . $self->_res($res);
+  }
+}
+
+sub people_increment{
+  my ( $self, $distinct_id, %params ) = @_;
+
+  die "Distinct User Id required" unless $distinct_id;
+
+  my $data = { '$add'  => \%params,
+               '$distinct_id' => $distinct_id,
+               '$ip' => 0,
+               '$token' => $self->{token}
+             };
+
+  my $res =
+    $self->{ua}->post( $self->{use_ssl}
+                        ? "https://$self->{people_api}"
+                        : "http://$self->{people_api}",
+                        { 'data' => encode_base64( $self->{json}->encode($data), '' ) } );
+
+  if ( $res->is_success ) {
+    if ( $res->content == 1 ) {
+      return 1;
+    }
+    else {
+      die "Failure from api: " . $res->content;
+    }
+  }
+  else {
+    die "Failed sending event: " . $self->_res($res);
+  }
+}
+
+sub people_append_transactions{
+  my ( $self, $distinct_id, %params ) = @_;
+
+  die "Distinct User Id required" unless $distinct_id;
+
+  my $data = { '$add'  => {'$transactions' => \%params},
+               '$distinct_id' => $distinct_id,
+               '$ip' => 0,
+               '$token' => $self->{token}
+             };
+
+  my $res =
+    $self->{ua}->post( $self->{use_ssl}
+                       ? "https://$self->{people_api}"
+                       : "http://$self->{people_api}",
+                       { 'data' => encode_base64( $self->{json}->encode($data), '' ) } );
+
+
+}
+
+sub people_track_charge{
+  my ( $self, $distinct_id, $amount ) = @_;
+  
+  die "Distinct User Id required" unless $distinct_id;
+
+  return $self->people_append_transactions( $distinct_id, '$time' => time(), '$amount' => $amount);
+}
+
 
 sub track {
   my ( $self, $event, %params ) = @_;
@@ -157,6 +247,14 @@ __END__
 
 =pod
 
+=head1 NAME
+
+WWW::Mixpanel
+
+=head1 VERSION
+
+version 0.04
+
 =head1 SYNOPSIS
 
   use WWW::Mixpanel;
@@ -179,6 +277,14 @@ The WWW::Mixpanel module is an implementation of the L<http://mixpanel.com> API 
 Currently, this module mirrors the event tracking API (L<http://mixpanel.com/api/docs/specification>), and will be extended to include the powerful data access and platform parts of the api. B<FEATURE REQUESTS> are always welcome, as are patches.
 
 This module is designed to die on failure, please use something like Try::Tiny.
+
+=head1 NAME
+
+WWW::Mixpanel
+
+=head1 VERSION
+
+version 0.04
 
 =head1 METHODS
 
@@ -241,5 +347,27 @@ Do your thing on CPAN.
 =head1 AFFILIATION
 
 I am not affiliated with mixpanel, I just use and like the service.
+
+=head1 AUTHOR
+
+Tom Eliaz
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Tom Eliaz.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=head1 AUTHOR
+
+Tom Eliaz
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Tom Eliaz.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
