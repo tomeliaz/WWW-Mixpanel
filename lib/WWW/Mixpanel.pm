@@ -7,7 +7,7 @@ use MIME::Base64;
 use JSON;
 
 BEGIN {
-  $WWW::Mixpanel::VERSION = '0.06';
+  $WWW::Mixpanel::VERSION = '0.07';
 }
 
 sub new {
@@ -97,7 +97,7 @@ sub people_append_transactions{
 
   die "Distinct User Id required" unless $distinct_id;
 
-  my $data = { '$add'  => {'$transactions' => \%params},
+  my $data = { '$append'  => {'$transactions' => \%params},
                '$distinct_id' => $distinct_id,
                '$ip' => 0,
                '$token' => $self->{token}
@@ -253,7 +253,7 @@ WWW::Mixpanel
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 SYNOPSIS
 
@@ -284,7 +284,7 @@ WWW::Mixpanel
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 METHODS
 
